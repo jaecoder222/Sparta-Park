@@ -13,7 +13,7 @@ export class UsersService {
   ) {}
 
   async signUp(
-    user: Pick<UsersModel, 'email' | 'password' | 'nickName' | 'role'>,
+    user: Pick<UsersModel, 'email' | 'password' | 'nickName' | 'isAdmin'>,
   ) {
     const existingUser = await this.UserRepository.findOne({
       where: { email: user.email },
@@ -35,7 +35,6 @@ export class UsersService {
       email: user.email,
       password: hashedPasswod,
       nickName: user.nickName,
-      role: user.role,
     });
 
     const newUser = this.UserRepository.save(userObject);

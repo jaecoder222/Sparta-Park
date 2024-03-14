@@ -10,6 +10,8 @@ import { configModuleValidationSchema } from './configs/env-validation.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { typeOrmModuleOptions } from './configs/database.config';
+import { ShowModule } from './show/show.module';
+import { BookModule } from './book/book.module';
 
 @Module({
   imports: [
@@ -20,8 +22,10 @@ import { typeOrmModuleOptions } from './configs/database.config';
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UsersModule,
     AuthModule,
+    ShowModule,
+    BookModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
