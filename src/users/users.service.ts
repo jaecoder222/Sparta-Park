@@ -1,26 +1,59 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UsersModel } from './entities/user.entity';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    @InjectRepository(UsersModel)
+    private readonly UserRepository: Repository<UsersModel>,
+  ) {}
+
+  async signUp(
+    user: Pick<UsersModel, 'email' | 'password' | 'nickName' | 'role'>,
+  ) {
+    const existingUser = await this.UserRepository.findOne({
+      where: { email: user.email },
+    });
+
+    if (existingUser)
+      throw new BadRequestException('이미 가입한 이메일입니다.');
+
+    const existingNickName = await this.UserRepository.findOne({
+      where: { nickName: user.nickName },
+    });
+
+    if (existingNickName)
+      throw new BadRequestException('이미 존재하는 이름입니다.');
+
+    const hashedPasswod = await bcrypt.hash(user.password, 10);
+
+    const userObject = this.UserRepository.create({
+      email: user.email,
+      password: hashedPasswod,
+      nickName: user.nickName,
+      role: user.role,
+    });
+
+    const newUser = this.UserRepository.save(userObject);
+
+    return newUser;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async signIn(email: string) {
+    return this.UserRepository.findOne({
+      where: { email },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findUser() {
+    return await this.UserRepository.find();
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
+  removeUser(id: number) {
     return `This action removes a #${id} user`;
   }
 }

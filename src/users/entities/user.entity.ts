@@ -2,18 +2,18 @@ import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { RolesEnum } from '../const/roles.const';
 
 @Entity()
-export class User {
+export class UsersModel {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'varchar', length: 20, unique: true, nullable: false })
   email: string;
 
-  @Column()
+  @Column({ type: 'varchar', select: false, nullable: false })
   password: string;
 
   @Column({ type: 'varchar', length: 20, unique: true, nullable: false })
-  name: string;
+  nickName: string;
 
   @Column({
     type: 'enum',
@@ -21,4 +21,7 @@ export class User {
     default: RolesEnum.USER,
   })
   role: RolesEnum;
+
+  @Column({ type: 'bigint', nullable: false, default: 1000000 })
+  point: number;
 }
