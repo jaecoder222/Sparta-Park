@@ -1,3 +1,11 @@
+import {
+  IsBoolean,
+  IsEmail,
+  IsNotEmpty,
+  IsNumber,
+  IsString,
+  IsStrongPassword,
+} from 'class-validator';
 import { Book } from 'src/book/entities/book.entity';
 import {
   Column,
@@ -12,19 +20,33 @@ export class User {
   @PrimaryGeneratedColumn({ unsigned: true }) // 양수만
   id: number;
 
+  @IsNotEmpty({ message: '이메일을 입력해 주세요.' })
+  @IsEmail({}, { message: '이메일 형식에 맞지 않습니다.' })
   @Column({ type: 'varchar', length: 20, unique: true, nullable: false })
   email: string;
 
-  @Column({ type: 'varchar', select: false, nullable: false })
+  @IsNotEmpty({ message: '비밀번호을 입력해 주세요.' })
+  @IsStrongPassword(
+    { minLength: 6 },
+    {
+      message:
+        '비밀번호는 영문 알파벳 대,소문자, 숫자, 특수문자(!@#$%^&*)를 포함해서 8자리 이상으로 입력해야합니다.',
+    },
+  )
+  @Column({ select: false })
   password: string;
 
+  @IsNotEmpty({ message: '닉네임을 입력해 주세요.' })
+  @IsString()
   @Column({ type: 'varchar', length: 20, nullable: false })
-  nickName: string;
+  nickname: string;
 
+  @IsNumber()
   @Column({ unsigned: true })
   points: number;
 
-  @Column({ name: 'is_admin' })
+  @IsBoolean()
+  @Column({ default: false })
   isAdmin: boolean;
 
   @CreateDateColumn()

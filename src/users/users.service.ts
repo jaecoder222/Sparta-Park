@@ -9,47 +9,47 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly UserRepository: Repository<User>,
+    private readonly userRepository: Repository<User>,
   ) {}
 
-  async signUp(
-    user: Pick<User, 'email' | 'password' | 'nickName' | 'isAdmin'>,
-  ) {
-    const existingUser = await this.UserRepository.findOne({
-      where: { email: user.email },
-    });
+  // async signUp(
+  //   user: Pick<User, 'email' | 'password' | 'nickname' | 'isAdmin'>,
+  // ) {
+  //   const existingUser = await this.userRepository.findOne({
+  //     where: { email: user.email },
+  //   });
 
-    if (existingUser)
-      throw new BadRequestException('이미 가입한 이메일입니다.');
+  //   if (existingUser)
+  //     throw new BadRequestException('이미 가입한 이메일입니다.');
 
-    const existingNickName = await this.UserRepository.findOne({
-      where: { nickName: user.nickName },
-    });
+  //   const existingNickName = await this.userRepository.findOne({
+  //     where: { nickname: user.nickname },
+  //   });
 
-    if (existingNickName)
-      throw new BadRequestException('이미 존재하는 이름입니다.');
+  //   if (existingNickName)
+  //     throw new BadRequestException('이미 존재하는 이름입니다.');
 
-    const hashedPasswod = await bcrypt.hash(user.password, 10);
+  //   const hashedPasswod = await bcrypt.hash(user.password, 10);
 
-    const userObject = this.UserRepository.create({
-      email: user.email,
-      password: hashedPasswod,
-      nickName: user.nickName,
-    });
+  //   const userObject = this.userRepository.create({
+  //     email: user.email,
+  //     password: hashedPasswod,
+  //     nickName: user.nickname,
+  //   });
 
-    const newUser = this.UserRepository.save(userObject);
+  //   const newUser = this.userRepository.save(userObject);
 
-    return newUser;
-  }
+  //   return newUser;
+  // }
 
   async signIn(email: string) {
-    return this.UserRepository.findOne({
+    return this.userRepository.findOne({
       where: { email },
     });
   }
 
   async findUser() {
-    return await this.UserRepository.find();
+    return await this.userRepository.find();
   }
 
   removeUser(id: number) {

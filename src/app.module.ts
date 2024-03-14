@@ -5,13 +5,11 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { UsersModule } from './users/users.module';
-//import { AuthModule } from './auth/auth.module';
 import { configModuleValidationSchema } from './configs/env-validation.config';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { typeOrmModuleOptions } from './configs/database.config';
 import { ShowModule } from './show/show.module';
 import { BookModule } from './book/book.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -21,7 +19,7 @@ import { BookModule } from './book/book.module';
     }),
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UsersModule,
-    //AuthModule,
+    AuthModule,
     ShowModule,
     BookModule,
   ],
