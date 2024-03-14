@@ -2,18 +2,18 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UsersModel } from './entities/user.entity';
+import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UsersModel)
-    private readonly UserRepository: Repository<UsersModel>,
+    @InjectRepository(User)
+    private readonly UserRepository: Repository<User>,
   ) {}
 
   async signUp(
-    user: Pick<UsersModel, 'email' | 'password' | 'nickName' | 'isAdmin'>,
+    user: Pick<User, 'email' | 'password' | 'nickName' | 'isAdmin'>,
   ) {
     const existingUser = await this.UserRepository.findOne({
       where: { email: user.email },

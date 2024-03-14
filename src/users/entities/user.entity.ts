@@ -1,12 +1,14 @@
+import { Book } from 'src/book/entities/book.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
-export class UsersModel {
+export class User {
   @PrimaryGeneratedColumn({ unsigned: true }) // 양수만
   id: number;
 
@@ -30,4 +32,7 @@ export class UsersModel {
 
   @CreateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Book, (book) => book.user)
+  books: Book[];
 }
